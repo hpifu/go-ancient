@@ -91,8 +91,8 @@ func main() {
 	r.GET("/ping", func(ctx *gin.Context) {
 		ctx.String(200, "ok")
 	})
-	r.GET("/ancient", svr.Ancient)
-	r.GET("/getancient", svr.GetAncient)
+	r.GET("/ancient", svr.Ancients)
+	r.GET("/ancient/:id", svr.Ancient)
 	r.GET("/getcategory", svr.GetCategory)
 
 	infoLog.Infof("%v init success, port [%v]", os.Args[0], config.GetString("service.port"))

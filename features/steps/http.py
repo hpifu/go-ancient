@@ -10,6 +10,8 @@ import json
 @when('请求 http')
 def step_impl(context):
     obj = json.loads(context.text)
+    if "params" not in obj:
+        obj["params"] = {}
     context.res = requests.get(
         "{}/{}".format(context.config["url"], obj["path"]),
         params=obj["params"]
