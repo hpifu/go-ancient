@@ -10,8 +10,8 @@ import (
 )
 
 type AncientReq struct {
-	Offset int
-	Limit  int
+	Offset int `form:"offset"`
+	Limit  int `form:"limit"`
 }
 
 func (s *Service) Ancient(c *gin.Context) {
@@ -42,6 +42,7 @@ func (s *Service) Ancient(c *gin.Context) {
 		c.String(status, err.Error())
 		return
 	}
+	fmt.Println(req)
 
 	if err = s.checkAncientReqBody(req); err != nil {
 		err = fmt.Errorf("check request body failed. body: [%v], err: [%v]", string(buf), err)

@@ -4,16 +4,16 @@ import "github.com/jinzhu/gorm"
 
 type Ancient struct {
 	ID      int    `gorm:"type:bigint(20) auto_increment;primary_key" json:"id"`
-	Title   string `gorm:"type:varchar(64);index:title_idx;unique_index:tad_idx;not null" json:"title"`
-	Author  string `gorm:"type:varchar(64);index:author_idx;unique_index:tad_idx;not null" json:"author"`
-	Dynasty string `gorm:"type:varchar(32);index:dynasty_idx;unique_index:tad_idx;not null" json:"dynasty"`
-	Content string `gorm:"type:longtext COLLATE utf8mb4_unicode_520_ci;not null" json:"content"`
+	Title   string `gorm:"type:varchar(64);index:title_idx;unique_index:tad_idx;not null" json:"title,omitempty"`
+	Author  string `gorm:"type:varchar(64);index:author_idx;unique_index:tad_idx;not null" json:"author,omitempty"`
+	Dynasty string `gorm:"type:varchar(32);index:dynasty_idx;unique_index:tad_idx;not null" json:"dynasty,omitempty"`
+	Content string `gorm:"type:longtext COLLATE utf8mb4_unicode_520_ci;not null" json:"content,omitempty"`
 }
 
 func (m *Mysql) SelectAncients(offset int, limit int) ([]*Ancient, error) {
 	var ancients []*Ancient
 
-	if err := m.db.Select("id, title, author, dynasty").Offset(offset).Limit(limit).Find(&ancients).Error; err != nil {
+	if err := m.db.Select("id, title, author, dynasty").Order("id").Offset(offset).Limit(limit).Find(&ancients).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
