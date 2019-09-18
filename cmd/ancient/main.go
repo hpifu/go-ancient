@@ -91,6 +91,7 @@ func main() {
 	r.GET("/ping", func(ctx *gin.Context) {
 		ctx.String(200, "ok")
 	})
+	r.GET("/ancient", svr.Ancient)
 	r.GET("/getancient", svr.GetAncient)
 	r.GET("/getcategory", svr.GetCategory)
 

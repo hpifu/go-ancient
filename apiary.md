@@ -19,9 +19,18 @@ HOST: https://api.ancient.hatlonely.com/
     - Body
 
             [
-                123,
-                124,
-                125
+                {
+                    "id": 123,
+                    "title": "静夜思",
+                    "author": "李白",
+                    "dynasty": "唐",
+                },
+                {
+                    "id": 123,
+                    "title": "绝句",
+                    "author": "杜甫",
+                    "dynasty": "唐",
+                },
             ]
 
 - Response 204
