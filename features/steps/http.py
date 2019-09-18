@@ -10,14 +10,17 @@ import json
 @when('请求 http')
 def step_impl(context):
     obj = json.loads(context.text)
-    res = requests.get(
+    context.res = requests.get(
         "{}/{}".format(context.config["url"], obj["path"]),
         params=obj["params"]
     )
+
+@then('检查 http')
+def step_impl(context):
+    res = context.res
+    obj = json.loads(context.text)
     print(res.text)
-    if "res" not in obj:
-        return
-    if "status" in obj['res']:
-        assert_that(res.status_code, equal_to(obj["res"]["status"]))
-    if "json" in obj['res']:
-        assert_that(json.loads(res.text), equal_to(obj["res"]["json"]))
+    if "status" in obj:
+        assert_that(res.status_code, equal_to(obj["status"]))
+    if "json" in obj:
+        assert_that(json.loads(res.text), equal_to(obj["json"]))

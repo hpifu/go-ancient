@@ -23,24 +23,27 @@ Feature: ancients 测试
                 "params": {
                     "offset": 0,
                     "limit": 2
-                },
-                "res": {
-                    "status": 200,
-                    "json": [
-                        {
-                            "id": 1,
-                            "title": "test 静夜思",
-                            "author": "李白",
-                            "dynasty": "唐"
-                        },
-                        {
-                            "id": 2,
-                            "title": "test 绝句",
-                            "author": "杜甫",
-                            "dynasty": "唐"
-                        }
-                    ]
                 }
+            }
+            """
+        Then 检查 http
+            """
+            {
+                "status": 200,
+                "json": [
+                    {
+                        "id": 1,
+                        "title": "test 静夜思",
+                        "author": "李白",
+                        "dynasty": "唐"
+                    },
+                    {
+                        "id": 2,
+                        "title": "test 绝句",
+                        "author": "杜甫",
+                        "dynasty": "唐"
+                    }
+                ]
             }
             """
         Given 执行 sql
