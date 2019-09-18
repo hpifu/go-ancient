@@ -10,7 +10,7 @@ type Ancient struct {
 	Content string `gorm:"type:longtext COLLATE utf8mb4_unicode_520_ci;not null" json:"content"`
 }
 
-func (m *MysqlDB) SelectAncientByID(id int) (*Ancient, error) {
+func (m *Mysql) SelectAncientByID(id int) (*Ancient, error) {
 	ancient := &Ancient{}
 	if err := m.db.Where("id=?", id).First(ancient).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -23,7 +23,7 @@ func (m *MysqlDB) SelectAncientByID(id int) (*Ancient, error) {
 	return ancient, nil
 }
 
-func (m *MysqlDB) SelectAncientByTitleAndAuthor(ancient *Ancient, offset int, limit int) ([]*Ancient, error) {
+func (m *Mysql) SelectAncientByTitleAndAuthor(ancient *Ancient, offset int, limit int) ([]*Ancient, error) {
 	var ancients []*Ancient
 
 	if err := m.db.Offset(offset).Limit(limit).Where(ancient).Find(&ancients).Error; err != nil {

@@ -5,13 +5,13 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-// MysqlDB db
-type MysqlDB struct {
+// Mysql db
+type Mysql struct {
 	db *gorm.DB
 }
 
 // NewMysqlDB create a db
-func NewMysqlDB(uri string) (*MysqlDB, error) {
+func NewMysqlDB(uri string) (*Mysql, error) {
 	db, err := gorm.Open("mysql", uri)
 	if err != nil {
 		return nil, err
@@ -23,7 +23,7 @@ func NewMysqlDB(uri string) (*MysqlDB, error) {
 		}
 	}
 
-	return &MysqlDB{
+	return &Mysql{
 		db: db,
 	}, nil
 }
