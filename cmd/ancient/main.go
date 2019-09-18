@@ -93,7 +93,8 @@ func main() {
 	})
 	r.GET("/ancient", svr.Ancients)
 	r.GET("/ancient/:id", svr.Ancient)
-	r.GET("/getcategory", svr.GetCategory)
+	r.GET("/author", svr.Authors)
+	r.GET("/dynasty", svr.Dynastys)
 
 	infoLog.Infof("%v init success, port [%v]", os.Args[0], config.GetString("service.port"))
 

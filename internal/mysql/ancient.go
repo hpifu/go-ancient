@@ -1,6 +1,9 @@
 package mysql
 
-import "github.com/jinzhu/gorm"
+import (
+	"fmt"
+	"github.com/jinzhu/gorm"
+)
 
 type Ancient struct {
 	ID      int    `gorm:"type:bigint(20) auto_increment;primary_key" json:"id"`
@@ -27,7 +30,7 @@ func (m *Mysql) SelectAncients(offset int, limit int) ([]*Ancient, error) {
 func (m *Mysql) SelectAuthors(offset int, limit int) ([]string, error) {
 	var authors []string
 
-	if err := m.db.Select("distinct title").Offset(offset).Limit(limit).Find(&authors).Error; err != nil {
+	if err := m.db.Table("ancients").Offset(offset).Limit(limit).Pluck("DISTINCT author", &authors).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
@@ -35,13 +38,15 @@ func (m *Mysql) SelectAuthors(offset int, limit int) ([]string, error) {
 		return nil, err
 	}
 
+	fmt.Println(authors)
+
 	return authors, nil
 }
 
 func (m *Mysql) SelectDynastys(offset int, limit int) ([]string, error) {
 	var dynastys []string
 
-	if err := m.db.Select("distinct dynasty").Offset(offset).Limit(limit).Find(&dynastys).Error; err != nil {
+	if err := m.db.Table("ancients").Offset(offset).Limit(limit).Pluck("DISTINCT dynasty", &dynastys).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}

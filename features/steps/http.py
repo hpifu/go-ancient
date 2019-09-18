@@ -13,7 +13,7 @@ def step_impl(context):
     if "params" not in obj:
         obj["params"] = {}
     context.res = requests.get(
-        "{}/{}".format(context.config["url"], obj["path"]),
+        "{}{}".format(context.config["url"], obj["path"]),
         params=obj["params"]
     )
 
