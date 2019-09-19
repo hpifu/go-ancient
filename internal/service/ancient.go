@@ -42,9 +42,9 @@ func (s *Service) Ancient(c *gin.Context) {
 		return
 	}
 
-	res, err = s.getAncient(req)
+	res, err = s.ancient(req)
 	if err != nil {
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("getAncient failed")
+		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("ancient failed")
 		status = http.StatusInternalServerError
 		c.String(status, err.Error())
 		return
@@ -54,6 +54,6 @@ func (s *Service) Ancient(c *gin.Context) {
 	c.JSON(status, res)
 }
 
-func (s *Service) getAncient(req *AncientReq) (*mysql.Ancient, error) {
+func (s *Service) ancient(req *AncientReq) (*mysql.Ancient, error) {
 	return s.db.SelectAncientByID(req.ID)
 }

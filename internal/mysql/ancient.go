@@ -73,7 +73,7 @@ func (m *Mysql) SelectAncientByID(id int) (*Ancient, error) {
 func (m *Mysql) SelectAncientByAuthor(author string, offset int, limit int) ([]*Ancient, error) {
 	var ancients []*Ancient
 
-	if err := m.db.Offset(offset).Limit(limit).Where(&Ancient{Author: author}).Find(&ancients).Error; err != nil {
+	if err := m.db.Offset(offset).Limit(limit).Select("id, title, author, dynasty").Order("id").Where(&Ancient{Author: author}).Find(&ancients).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
@@ -87,7 +87,7 @@ func (m *Mysql) SelectAncientByAuthor(author string, offset int, limit int) ([]*
 func (m *Mysql) SelectAncientByDynasty(dynasty string, offset int, limit int) ([]*Ancient, error) {
 	var ancients []*Ancient
 
-	if err := m.db.Offset(offset).Limit(limit).Where(&Ancient{Dynasty: dynasty}).Find(&ancients).Error; err != nil {
+	if err := m.db.Offset(offset).Limit(limit).Select("id, title, author, dynasty").Order("id").Where(&Ancient{Dynasty: dynasty}).Find(&ancients).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
