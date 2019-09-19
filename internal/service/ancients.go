@@ -19,7 +19,7 @@ func (s *Service) Ancients(c *gin.Context) {
 	var buf []byte
 	status := http.StatusOK
 	rid := c.DefaultQuery("rid", NewToken())
-	req := &AncientsReq{}
+	req := &AncientsReq{Limit: 20}
 
 	defer func() {
 		AccessLog.WithFields(logrus.Fields{
@@ -48,6 +48,10 @@ func (s *Service) Ancients(c *gin.Context) {
 		status = http.StatusInternalServerError
 		c.String(status, err.Error())
 		return
+	}
+
+	if req.Limit > 50 {
+		req.Limit = 50
 	}
 
 	if res == nil {

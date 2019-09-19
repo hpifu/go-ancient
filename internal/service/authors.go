@@ -18,7 +18,7 @@ func (s *Service) Authors(c *gin.Context) {
 	var buf []byte
 	status := http.StatusOK
 	rid := c.DefaultQuery("rid", NewToken())
-	req := &AuthorsReq{}
+	req := &AuthorsReq{Limit: 20}
 
 	defer func() {
 		AccessLog.WithFields(logrus.Fields{
@@ -39,6 +39,10 @@ func (s *Service) Authors(c *gin.Context) {
 		status = http.StatusBadRequest
 		c.String(status, err.Error())
 		return
+	}
+
+	if req.Limit > 50 {
+		req.Limit = 50
 	}
 
 	res, err = s.authors(req)

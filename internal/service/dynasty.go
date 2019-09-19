@@ -18,7 +18,7 @@ func (s *Service) Dynasty(c *gin.Context) {
 	var res []*mysql.Ancient
 	var err error
 	var buf []byte
-	req := &DynastyReq{}
+	req := &DynastyReq{Limit: 20}
 	status := http.StatusOK
 	rid := c.DefaultQuery("rid", NewToken())
 
@@ -41,6 +41,10 @@ func (s *Service) Dynasty(c *gin.Context) {
 		status = http.StatusBadRequest
 		c.String(status, err.Error())
 		return
+	}
+
+	if req.Limit > 50 {
+		req.Limit = 50
 	}
 
 	res, err = s.dynasty(req)
