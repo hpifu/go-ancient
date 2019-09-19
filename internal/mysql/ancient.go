@@ -81,6 +81,10 @@ func (m *Mysql) SelectAncientByAuthor(author string, offset int, limit int) ([]*
 		return nil, err
 	}
 
+	if len(ancients) == 0 {
+		return nil, nil
+	}
+
 	return ancients, nil
 }
 
@@ -95,18 +99,8 @@ func (m *Mysql) SelectAncientByDynasty(dynasty string, offset int, limit int) ([
 		return nil, err
 	}
 
-	return ancients, nil
-}
-
-func (m *Mysql) SelectAncientByTitleAndAuthor(ancient *Ancient, offset int, limit int) ([]*Ancient, error) {
-	var ancients []*Ancient
-
-	if err := m.db.Offset(offset).Limit(limit).Where(ancient).Find(&ancients).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, nil
-		}
-
-		return nil, err
+	if len(ancients) == 0 {
+		return nil, nil
 	}
 
 	return ancients, nil
