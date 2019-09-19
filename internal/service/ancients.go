@@ -2,11 +2,10 @@ package service
 
 import (
 	"fmt"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/hpifu/go-ancient/internal/mysql"
 	"github.com/sirupsen/logrus"
+	"net/http"
 )
 
 type AncientsReq struct {
