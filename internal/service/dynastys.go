@@ -50,6 +50,12 @@ func (s *Service) Dynastys(c *gin.Context) {
 		return
 	}
 
+	if res == nil {
+		status = http.StatusNoContent
+		c.Status(status)
+		return
+	}
+
 	status = http.StatusOK
 	c.JSON(status, res)
 }

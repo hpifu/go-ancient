@@ -60,6 +60,12 @@ func (s *Service) Author(c *gin.Context) {
 		return
 	}
 
+	if res == nil {
+		status = http.StatusNoContent
+		c.Status(status)
+		return
+	}
+
 	status = http.StatusOK
 	c.JSON(status, res)
 }

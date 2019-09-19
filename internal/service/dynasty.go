@@ -11,8 +11,8 @@ import (
 
 type DynastyReq struct {
 	Dynasty string `uri:"dynasty"`
-	Offset int    `form:"offset"`
-	Limit  int    `form:"limit"`
+	Offset  int    `form:"offset"`
+	Limit   int    `form:"limit"`
 }
 
 func (s *Service) Dynasty(c *gin.Context) {
@@ -49,6 +49,12 @@ func (s *Service) Dynasty(c *gin.Context) {
 		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("dynasty failed")
 		status = http.StatusInternalServerError
 		c.String(status, err.Error())
+		return
+	}
+
+	if res == nil {
+		status = http.StatusNoContent
+		c.Status(status)
 		return
 	}
 

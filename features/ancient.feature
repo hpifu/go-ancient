@@ -3,7 +3,7 @@ Feature: ancient 测试
     Scenario: ancient
         Given 执行 sql
             """
-            DELETE FROM ancients WHERE id IN (1,2)
+            DELETE FROM ancients WHERE id IN (1,2,3)
             """
         Given 执行 sql
             """
@@ -53,6 +53,19 @@ Feature: ancient 测试
                     "dynasty": "唐",
                     "content": "两个黄鹂鸣翠柳，一行白鹭上青天。 窗含西岭千秋雪，门泊东吴万里船。"
                 }
+            }
+            """
+        When 请求 http
+            """
+            {
+                "method": "get",
+                "path": "/ancient/3"
+            }
+            """
+        Then 检查 http
+            """
+            {
+                "status": 204
             }
             """
         Given 执行 sql
