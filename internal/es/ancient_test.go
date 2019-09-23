@@ -7,7 +7,7 @@ import (
 )
 
 func TestES_SearchAncient(t *testing.T) {
-	e, err := NewES("http://127.0.0.1:9200")
+	e, err := NewES("http://test-elasticsearch:9200")
 	Convey("test ancient", t, func() {
 		So(err, ShouldBeNil)
 		as, err := e.SearchAncient("李白 行路难", 0, 10)
