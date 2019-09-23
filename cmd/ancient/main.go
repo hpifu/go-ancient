@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/hpifu/go-ancient/internal/es"
 	"github.com/hpifu/go-ancient/internal/mysql"
 	"github.com/hpifu/go-ancient/internal/service"
 	"github.com/hpifu/go-kit/logger"
@@ -63,11 +64,18 @@ func main() {
 	}
 	infoLog.Infof("init mysqldb success. uri [%v]", config.GetString("mysqldb.uri"))
 
+	// init elasticsearch
+	esclient, err := es.NewES(config.GetString("es.uri"))
+	if err != nil {
+		panic(err)
+	}
+	infoLog.Infof("init elasticsearch success. uri [%v]", config.GetString("es.uri"))
+
 	secure := config.GetBool("service.cookieSecure")
 	domain := config.GetString("service.cookieDomain")
 	origin := config.GetString("service.allowOrigin")
 	// init services
-	svr := service.NewService(db, secure, domain)
+	svr := service.NewService(db, esclient, secure, domain)
 
 	// init gin
 	gin.SetMode(gin.ReleaseMode)
@@ -97,6 +105,7 @@ func main() {
 	r.GET("/author/:author", svr.Author)
 	r.GET("/dynasty", svr.Dynastys)
 	r.GET("/dynasty/:dynasty", svr.Dynasty)
+	r.GET("/search", svr.Search)
 
 	infoLog.Infof("%v init success, port [%v]", os.Args[0], config.GetString("service.port"))
 

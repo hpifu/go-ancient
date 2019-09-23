@@ -42,16 +42,16 @@ func (s *Service) Ancients(c *gin.Context) {
 		return
 	}
 
+	if req.Limit > 50 {
+		req.Limit = 50
+	}
+
 	res, err = s.ancients(req)
 	if err != nil {
 		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("ancients failed")
 		status = http.StatusInternalServerError
 		c.String(status, err.Error())
 		return
-	}
-
-	if req.Limit > 50 {
-		req.Limit = 50
 	}
 
 	if res == nil {

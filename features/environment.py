@@ -24,6 +24,9 @@ config = {
         "allowOrigin": "http://127.0.0.1:4000",
         "cookieDomain": "127.0.0.1"
     },
+    "es": {
+        "uri": "http://127.0.0.1:9200"
+    },
     "mysqldb": {
         "host": "test-mysql",
         "port": 3306,
@@ -59,6 +62,7 @@ def deploy():
         host=config["mysqldb"]["host"],
         port=config["mysqldb"]["port"],
     )
+    cf["es"]["uri"] = config["es"]["uri"],
     cf["service"]["port"] = ":{}".format(config["service"]["port"])
     cf["service"]["cookieSecure"] = config["service"]["cookieSecure"]
     cf["service"]["cookieDomain"] = config["service"]["cookieDomain"]

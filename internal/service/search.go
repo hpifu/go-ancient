@@ -3,22 +3,24 @@ package service
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/hpifu/go-ancient/internal/es"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
-type DynastysReq struct {
-	Offset int `form:"offset"`
-	Limit  int `form:"limit"`
+type SearchReq struct {
+	Q      string `form:"q"`
+	Offset int    `form:"offset"`
+	Limit  int    `form:"limit"`
 }
 
-func (s *Service) Dynastys(c *gin.Context) {
-	var res []string
+func (s *Service) Search(c *gin.Context) {
+	var res []*es.Ancient
 	var err error
 	var buf []byte
+	req := &SearchReq{}
 	status := http.StatusOK
 	rid := c.DefaultQuery("rid", NewToken())
-	req := &DynastysReq{Limit: 20}
 
 	defer func() {
 		AccessLog.WithFields(logrus.Fields{
@@ -34,7 +36,7 @@ func (s *Service) Dynastys(c *gin.Context) {
 	}()
 
 	if err := c.BindUri(req); err != nil {
-		err = fmt.Errorf("bind uri failed. err: [%v]", err)
+		err = fmt.Errorf("bind failed. err: [%v]", err)
 		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
 		status = http.StatusBadRequest
 		c.String(status, err.Error())
@@ -53,9 +55,9 @@ func (s *Service) Dynastys(c *gin.Context) {
 		req.Limit = 50
 	}
 
-	res, err = s.dynastys(req)
+	res, err = s.search(req)
 	if err != nil {
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("dynastys failed")
+		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("search failed")
 		status = http.StatusInternalServerError
 		c.String(status, err.Error())
 		return
@@ -71,6 +73,6 @@ func (s *Service) Dynastys(c *gin.Context) {
 	c.JSON(status, res)
 }
 
-func (s *Service) dynastys(req *DynastysReq) ([]string, error) {
-	return s.db.SelectDynastys(req.Offset, req.Limit)
+func (s *Service) search(req *SearchReq) ([]*es.Ancient, error) {
+	return s.es.SearchAncient(req.Q, req.Offset, req.Limit)
 }
