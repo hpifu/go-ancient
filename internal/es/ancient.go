@@ -5,6 +5,7 @@ import (
 	"github.com/olivere/elastic/v7"
 	"reflect"
 	"strings"
+	"time"
 )
 
 type Ancient struct {
@@ -39,11 +40,13 @@ func (e *ES) SearchAncient(value string, offset int, limit int) ([]*Ancient, err
 		query.Must(q)
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), 5000*time.Millisecond)
+	defer cancel()
 	res, err := e.es.Search().
 		Index("ancient").
 		Query(query).
 		From(offset).Size(limit).
-		Do(context.Background())
+		Do(ctx)
 
 	if err != nil {
 		return nil, err

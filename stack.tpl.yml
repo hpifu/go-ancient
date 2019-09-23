@@ -13,6 +13,7 @@ services:
       - go-ancientnet
       - mysqlnet
       - redisnet
+      - elasticsearchnet
 networks:
   go-ancientnet:
     name: go-ancientnet
@@ -22,3 +23,6 @@ networks:
   mysqlnet:
     external: true
     name: mysqlnet
+  elasticsearchnet:
+    external: true
+    name: elasticsearchnet

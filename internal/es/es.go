@@ -2,8 +2,8 @@ package es
 
 import (
 	"context"
-	"fmt"
 	"github.com/olivere/elastic/v7"
+	"time"
 )
 
 type ES struct {
@@ -16,13 +16,13 @@ func NewES(uri string) (*ES, error) {
 		elastic.SetSniff(false),
 	)
 
-	fmt.Println(err, client)
-
 	if err != nil {
 		return nil, err
 	}
 
-	_, _, err = client.Ping(uri).Do(context.Background())
+	ctx, cancel := context.WithTimeout(context.Background(), 3000*time.Millisecond)
+	defer cancel()
+	_, _, err = client.Ping(uri).Do(ctx)
 	if err != nil {
 		return nil, err
 	}
