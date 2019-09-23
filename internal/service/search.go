@@ -18,7 +18,7 @@ func (s *Service) Search(c *gin.Context) {
 	var res []*es.Ancient
 	var err error
 	var buf []byte
-	req := &SearchReq{}
+	req := &SearchReq{Limit: 20}
 	status := http.StatusOK
 	rid := c.DefaultQuery("rid", NewToken())
 
