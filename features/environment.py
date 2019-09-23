@@ -62,7 +62,7 @@ def deploy():
         host=config["mysqldb"]["host"],
         port=config["mysqldb"]["port"],
     )
-    cf["es"]["uri"] = config["es"]["uri"],
+    cf["es"]["uri"] = config["es"]["uri"]
     cf["service"]["port"] = ":{}".format(config["service"]["port"])
     cf["service"]["cookieSecure"] = config["service"]["cookieSecure"]
     cf["service"]["cookieDomain"] = config["service"]["cookieDomain"]

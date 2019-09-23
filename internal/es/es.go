@@ -22,7 +22,7 @@ func NewES(uri string) (*ES, error) {
 		return nil, err
 	}
 
-	_, _, err = client.Ping("http://127.0.0.1:9200").Do(context.Background())
+	_, _, err = client.Ping(uri).Do(context.Background())
 	if err != nil {
 		return nil, err
 	}
