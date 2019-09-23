@@ -25,7 +25,7 @@ config = {
         "cookieDomain": "127.0.0.1"
     },
     "es": {
-        "uri": "http://127.0.0.1:9200"
+        "uri": "http://test-elasticsearch:9200"
     },
     "mysqldb": {
         "host": "test-mysql",
