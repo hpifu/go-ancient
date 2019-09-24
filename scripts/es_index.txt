@@ -1,0 +1,57 @@
+PUT ancient
+{
+    "settings": {
+        "analysis": {
+            "tokenizer": {
+                "ngram_tokenizer": {
+                    "type": "nGram",
+                    "min_gram": 1,
+                    "max_gram": 10,
+                    "token_chars": [
+                        "letter",
+                        "digit"
+                    ]
+                }
+            },
+            "analyzer": {
+                "ngram_tokenizer_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "ngram_tokenizer",
+                    "filter": [
+                        "lowercase"
+                    ]
+                }
+            }
+        },
+        "max_ngram_diff": "10"
+    }
+}
+
+PUT ancient/_mapping
+{
+    "properties": {
+        "id": {
+            "type": "long"
+        },
+        "title": {
+            "type": "text",
+            "analyzer": "ngram_tokenizer_analyzer",
+            "search_analyzer": "standard"
+        },
+        "author": {
+            "type": "text",
+            "analyzer": "ngram_tokenizer_analyzer",
+            "search_analyzer": "standard"
+        },
+        "dynasty": {
+            "type": "text",
+            "analyzer": "ngram_tokenizer_analyzer",
+            "search_analyzer": "standard"
+        },
+        "content": {
+            "type": "text",
+            "analyzer": "ngram_tokenizer_analyzer",
+            "search_analyzer": "standard"
+        }
+    }
+}
