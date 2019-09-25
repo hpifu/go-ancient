@@ -5,6 +5,32 @@ HOST: https://api.ancient.hatlonely.com/
 
 获取古诗文接口
 
+
+## 搜索 [/search?q={query}&offset={offset}&limit={limit}]
+
+- Parameters
+
+    - q: `李白` (string) - 关键词
+    - offset: `0` (number) - 页偏移
+    - limit: `10` (number) - 最多结果
+
+- Response 200 (application/json)
+
+    - Body
+
+            [
+                {
+                    "id": 123,
+                    "title": "静夜思",
+                    "author": "李白",
+                    "dynasty": "唐",
+                    "content": "床前明月光，疑是地上霜。举头望明月，低头思故乡。",
+                }
+            ]
+
+- Response 204
+- Response 400
+
 ## 所有作品 [/ancient?offset={offset}&limit={limit}]
 
 - Parameters
