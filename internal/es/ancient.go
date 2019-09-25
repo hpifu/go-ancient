@@ -32,6 +32,9 @@ func split(s string) []string {
 func (e *ES) SearchAncient(value string, offset int, limit int) ([]*Ancient, error) {
 	query := elastic.NewBoolQuery()
 	for _, val := range split(value) {
+		if len(val) == 0 {
+			continue
+		}
 		q := elastic.NewBoolQuery()
 		q.Should(elastic.NewTermQuery("title", val))
 		q.Should(elastic.NewTermQuery("author", val))
