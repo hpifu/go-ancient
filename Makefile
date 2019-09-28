@@ -64,7 +64,6 @@ image: buildenv
 	docker build --tag=hatlonely/${repository}:${version} .
 	cat stack.tpl.yml | sed 's/\$${version}/${version}/g' | sed 's/\$${repository}/${repository}/g' > stack.yml
 
-
 .PHONY: dockertest
 dockertest: buildenv
 	docker exec -i go-build-env rm -rf /data/src/${gituser}/${repository}
