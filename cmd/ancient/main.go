@@ -100,13 +100,13 @@ func main() {
 	r.GET("/ping", func(ctx *gin.Context) {
 		ctx.String(200, "ok")
 	})
-	r.GET("/ancient", svr.Ancients)
+	r.GET("/ancient", service.Decorator(svr.Ancients))
 	r.GET("/ancient/:id", service.Decorator(svr.Ancient))
-	r.GET("/author", svr.Authors)
-	r.GET("/author/:author", svr.Author)
-	r.GET("/dynasty", svr.Dynastys)
-	r.GET("/dynasty/:dynasty", svr.Dynasty)
-	r.GET("/search", svr.Search)
+	r.GET("/author", service.Decorator(svr.Authors))
+	r.GET("/author/:author", service.Decorator(svr.Author))
+	r.GET("/dynasty", service.Decorator(svr.Dynastys))
+	r.GET("/dynasty/:dynasty", service.Decorator(svr.Dynasty))
+	r.GET("/search", service.Decorator(svr.Search))
 
 	infoLog.Infof("%v init success, port [%v]", os.Args[0], config.GetString("service.port"))
 

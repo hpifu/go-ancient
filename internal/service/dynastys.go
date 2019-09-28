@@ -2,9 +2,9 @@ package service
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type DynastysReq struct {
@@ -12,65 +12,25 @@ type DynastysReq struct {
 	Limit  int `form:"limit"`
 }
 
-func (s *Service) Dynastys(c *gin.Context) {
-	var res []string
-	var err error
-	var buf []byte
-	status := http.StatusOK
-	rid := c.DefaultQuery("rid", NewToken())
-	req := &DynastysReq{Limit: 20}
-
-	defer func() {
-		AccessLog.WithFields(logrus.Fields{
-			"host":   c.Request.Host,
-			"body":   string(buf),
-			"url":    c.Request.URL.String(),
-			"req":    req,
-			"res":    res,
-			"rid":    rid,
-			"err":    err,
-			"status": status,
-		}).Info()
-	}()
-
-	if err := c.BindUri(req); err != nil {
-		err = fmt.Errorf("bind uri failed. err: [%v]", err)
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
-		status = http.StatusBadRequest
-		c.String(status, err.Error())
-		return
-	}
+func (s *Service) Dynastys(c *gin.Context) (interface{}, interface{}, int, error) {
+	req := &AuthorsReq{Limit: 20}
 
 	if err := c.Bind(req); err != nil {
-		err = fmt.Errorf("bind failed. err: [%v]", err)
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
-		status = http.StatusBadRequest
-		c.String(status, err.Error())
-		return
+		return nil, nil, http.StatusBadRequest, fmt.Errorf("bind failed. err: [%v]", err)
 	}
 
 	if req.Limit > 50 {
 		req.Limit = 50
 	}
 
-	res, err = s.dynastys(req)
+	dyanstys, err := s.db.SelectDynastys(req.Offset, req.Limit)
 	if err != nil {
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("dynastys failed")
-		status = http.StatusInternalServerError
-		c.String(status, err.Error())
-		return
+		return req, nil, http.StatusInternalServerError, fmt.Errorf("mysql select dyanstys failed. err: [%v]", err)
 	}
 
-	if res == nil {
-		status = http.StatusNoContent
-		c.Status(status)
-		return
+	if dyanstys == nil {
+		return req, nil, http.StatusNoContent, nil
 	}
 
-	status = http.StatusOK
-	c.JSON(status, res)
-}
-
-func (s *Service) dynastys(req *DynastysReq) ([]string, error) {
-	return s.db.SelectDynastys(req.Offset, req.Limit)
+	return req, dyanstys, http.StatusOK, nil
 }

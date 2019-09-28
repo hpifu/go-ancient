@@ -2,10 +2,9 @@ package service
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/hpifu/go-ancient/internal/mysql"
-	"github.com/sirupsen/logrus"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type AuthorReq struct {
@@ -14,65 +13,30 @@ type AuthorReq struct {
 	Limit  int    `form:"limit"`
 }
 
-func (s *Service) Author(c *gin.Context) {
-	var res []*mysql.Ancient
-	var err error
-	var buf []byte
+func (s *Service) Author(c *gin.Context) (interface{}, interface{}, int, error) {
 	req := &AuthorReq{Limit: 20}
-	status := http.StatusOK
-	rid := c.DefaultQuery("rid", NewToken())
-
-	defer func() {
-		AccessLog.WithFields(logrus.Fields{
-			"host":   c.Request.Host,
-			"body":   string(buf),
-			"url":    c.Request.URL.String(),
-			"req":    req,
-			"res":    res,
-			"rid":    rid,
-			"err":    err,
-			"status": status,
-		}).Info()
-	}()
 
 	if err := c.BindUri(req); err != nil {
-		err = fmt.Errorf("bind uri failed. err: [%v]", err)
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
-		status = http.StatusBadRequest
-		c.String(status, err.Error())
-		return
+		return nil, nil, http.StatusBadRequest, fmt.Errorf("bind uri failed. err: [%v]", err)
 	}
 
 	if err := c.Bind(req); err != nil {
-		err = fmt.Errorf("bind failed. err: [%v]", err)
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
-		status = http.StatusBadRequest
-		c.String(status, err.Error())
-		return
+		return nil, nil, http.StatusBadRequest, fmt.Errorf("bind failed. err: [%v]", err)
 	}
 
 	if req.Limit > 50 {
 		req.Limit = 50
 	}
 
-	res, err = s.author(req)
+	ancients, err := s.db.SelectAncientByAuthor(req.Author, req.Offset, req.Limit)
+
 	if err != nil {
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("author failed")
-		status = http.StatusInternalServerError
-		c.String(status, err.Error())
-		return
+		return req, nil, http.StatusInternalServerError, fmt.Errorf("mysql select ancient failed. err: [%v]", err)
 	}
 
-	if res == nil {
-		status = http.StatusNoContent
-		c.Status(status)
-		return
+	if ancients == nil {
+		return req, nil, http.StatusNoContent, nil
 	}
 
-	status = http.StatusOK
-	c.JSON(status, res)
-}
-
-func (s *Service) author(req *AuthorReq) ([]*mysql.Ancient, error) {
-	return s.db.SelectAncientByAuthor(req.Author, req.Offset, req.Limit)
+	return req, ancients, http.StatusOK, nil
 }

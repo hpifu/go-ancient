@@ -2,9 +2,9 @@ package service
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type AuthorsReq struct {
@@ -12,57 +12,25 @@ type AuthorsReq struct {
 	Limit  int `form:"limit"`
 }
 
-func (s *Service) Authors(c *gin.Context) {
-	var res []string
-	var err error
-	var buf []byte
-	status := http.StatusOK
-	rid := c.DefaultQuery("rid", NewToken())
+func (s *Service) Authors(c *gin.Context) (interface{}, interface{}, int, error) {
 	req := &AuthorsReq{Limit: 20}
 
-	defer func() {
-		AccessLog.WithFields(logrus.Fields{
-			"host":   c.Request.Host,
-			"body":   string(buf),
-			"url":    c.Request.URL.String(),
-			"req":    req,
-			"res":    res,
-			"rid":    rid,
-			"err":    err,
-			"status": status,
-		}).Info()
-	}()
-
 	if err := c.Bind(req); err != nil {
-		err = fmt.Errorf("bind failed. err: [%v]", err)
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn()
-		status = http.StatusBadRequest
-		c.String(status, err.Error())
-		return
+		return nil, nil, http.StatusBadRequest, fmt.Errorf("bind failed. err: [%v]", err)
 	}
 
 	if req.Limit > 50 {
 		req.Limit = 50
 	}
 
-	res, err = s.authors(req)
+	authors, err := s.db.SelectAuthors(req.Offset, req.Limit)
 	if err != nil {
-		WarnLog.WithField("@rid", rid).WithField("err", err).Warn("authors failed")
-		status = http.StatusInternalServerError
-		c.String(status, err.Error())
-		return
+		return req, nil, http.StatusInternalServerError, fmt.Errorf("mysql select authors failed. err: [%v]", err)
 	}
 
-	if res == nil {
-		status = http.StatusNoContent
-		c.Status(status)
-		return
+	if authors == nil {
+		return req, nil, http.StatusNoContent, nil
 	}
 
-	status = http.StatusOK
-	c.JSON(status, res)
-}
-
-func (s *Service) authors(req *AuthorsReq) ([]string, error) {
-	return s.db.SelectAuthors(req.Offset, req.Limit)
+	return req, authors, http.StatusOK, nil
 }
