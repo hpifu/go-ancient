@@ -3,14 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/hpifu/go-ancient/internal/es"
 	"github.com/hpifu/go-ancient/internal/mysql"
 	"github.com/hpifu/go-ancient/internal/service"
 	"github.com/hpifu/go-kit/logger"
 	"github.com/spf13/viper"
-	"os"
-	"strings"
 )
 
 // AppVersion name
@@ -100,7 +101,7 @@ func main() {
 		ctx.String(200, "ok")
 	})
 	r.GET("/ancient", svr.Ancients)
-	r.GET("/ancient/:id", svr.Ancient)
+	r.GET("/ancient/:id", service.Decorator(svr.Ancient))
 	r.GET("/author", svr.Authors)
 	r.GET("/author/:author", svr.Author)
 	r.GET("/dynasty", svr.Dynastys)
