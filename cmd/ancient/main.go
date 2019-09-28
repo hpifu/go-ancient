@@ -76,7 +76,7 @@ func main() {
 	domain := config.GetString("service.cookieDomain")
 	origin := config.GetString("service.allowOrigin")
 	// init services
-	svr := service.NewService(db, esclient, secure, domain)
+	svc := service.NewService(db, esclient, secure, domain)
 
 	// init gin
 	gin.SetMode(gin.ReleaseMode)
@@ -100,13 +100,13 @@ func main() {
 	r.GET("/ping", func(ctx *gin.Context) {
 		ctx.String(200, "ok")
 	})
-	r.GET("/ancient", service.Decorator(svr.Ancients))
-	r.GET("/ancient/:id", service.Decorator(svr.Ancient))
-	r.GET("/author", service.Decorator(svr.Authors))
-	r.GET("/author/:author", service.Decorator(svr.Author))
-	r.GET("/dynasty", service.Decorator(svr.Dynastys))
-	r.GET("/dynasty/:dynasty", service.Decorator(svr.Dynasty))
-	r.GET("/search", service.Decorator(svr.Search))
+	r.GET("/ancient", service.Decorator(svc.GETAncients))
+	r.GET("/ancient/:id", service.Decorator(svc.GETAncient))
+	r.GET("/author", service.Decorator(svc.GETAuthors))
+	r.GET("/author/:author", service.Decorator(svc.GETAuthor))
+	r.GET("/dynasty", service.Decorator(svc.GETDynastys))
+	r.GET("/dynasty/:dynasty", service.Decorator(svc.GETDynasty))
+	r.GET("/search", service.Decorator(svc.Search))
 
 	infoLog.Infof("%v init success, port [%v]", os.Args[0], config.GetString("service.port"))
 

@@ -7,12 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type DynastysReq struct {
+type AuthorsReq struct {
 	Offset int `form:"offset"`
 	Limit  int `form:"limit"`
 }
 
-func (s *Service) Dynastys(c *gin.Context) (interface{}, interface{}, int, error) {
+func (s *Service) GETAuthors(c *gin.Context) (interface{}, interface{}, int, error) {
 	req := &AuthorsReq{Limit: 20}
 
 	if err := c.Bind(req); err != nil {
@@ -23,14 +23,14 @@ func (s *Service) Dynastys(c *gin.Context) (interface{}, interface{}, int, error
 		req.Limit = 50
 	}
 
-	dyanstys, err := s.db.SelectDynastys(req.Offset, req.Limit)
+	authors, err := s.db.SelectAuthors(req.Offset, req.Limit)
 	if err != nil {
-		return req, nil, http.StatusInternalServerError, fmt.Errorf("mysql select dyanstys failed. err: [%v]", err)
+		return req, nil, http.StatusInternalServerError, fmt.Errorf("mysql select authors failed. err: [%v]", err)
 	}
 
-	if dyanstys == nil {
+	if authors == nil {
 		return req, nil, http.StatusNoContent, nil
 	}
 
-	return req, dyanstys, http.StatusOK, nil
+	return req, authors, http.StatusOK, nil
 }

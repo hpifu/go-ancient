@@ -7,13 +7,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AuthorReq struct {
-	Author string `uri:"author"`
-	Offset int    `form:"offset"`
-	Limit  int    `form:"limit"`
+type DynastyReq struct {
+	Dynasty string `uri:"dynasty"`
+	Offset  int    `form:"offset"`
+	Limit   int    `form:"limit"`
 }
 
-func (s *Service) Author(c *gin.Context) (interface{}, interface{}, int, error) {
+func (s *Service) GETDynasty(c *gin.Context) (interface{}, interface{}, int, error) {
 	req := &AuthorReq{Limit: 20}
 
 	if err := c.BindUri(req); err != nil {
@@ -28,7 +28,7 @@ func (s *Service) Author(c *gin.Context) (interface{}, interface{}, int, error) 
 		req.Limit = 50
 	}
 
-	ancients, err := s.db.SelectAncientByAuthor(req.Author, req.Offset, req.Limit)
+	ancients, err := s.db.SelectAncientByDynasty(req.Author, req.Offset, req.Limit)
 
 	if err != nil {
 		return req, nil, http.StatusInternalServerError, fmt.Errorf("mysql select ancient failed. err: [%v]", err)

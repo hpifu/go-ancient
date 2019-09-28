@@ -11,7 +11,7 @@ type AncientReq struct {
 	ID int `uri:"id"`
 }
 
-func (s *Service) Ancient(c *gin.Context) (interface{}, interface{}, int, error) {
+func (s *Service) GETAncient(c *gin.Context) (interface{}, interface{}, int, error) {
 	req := &AncientReq{}
 
 	if err := c.BindUri(req); err != nil {

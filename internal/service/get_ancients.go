@@ -12,7 +12,7 @@ type AncientsReq struct {
 	Limit  int `form:"limit"`
 }
 
-func (s *Service) Ancients(c *gin.Context) (interface{}, interface{}, int, error) {
+func (s *Service) GETAncients(c *gin.Context) (interface{}, interface{}, int, error) {
 	req := &AncientsReq{Limit: 20}
 
 	if err := c.Bind(req); err != nil {
