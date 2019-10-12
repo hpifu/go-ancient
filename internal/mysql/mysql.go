@@ -11,8 +11,8 @@ type Mysql struct {
 	db *gorm.DB
 }
 
-// NewMysqlDB create a db
-func NewMysqlDB(uri string) (*Mysql, error) {
+// NewMysql create a db
+func NewMysql(uri string) (*Mysql, error) {
 	db, err := gorm.Open("mysql", uri)
 	if err != nil {
 		return nil, err

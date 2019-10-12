@@ -66,7 +66,7 @@ func main() {
 	service.AccessLog = accessLog
 
 	// init mysqldb
-	db, err := mysql.NewMysqlDB(config.GetString("mysqldb.uri"))
+	db, err := mysql.NewMysql(config.GetString("mysqldb.uri"))
 	if err != nil {
 		panic(err)
 	}

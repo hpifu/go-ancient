@@ -7,7 +7,7 @@ import (
 )
 
 func TestMysqlDB_SelectAncient(t *testing.T) {
-	m, err := NewMysqlDB("hatlonely:keaiduo1@tcp(test-mysql:3306)/hads?charset=utf8&parseTime=True&loc=Local")
+	m, err := NewMysql("hatlonely:keaiduo1@tcp(test-mysql:3306)/hads?charset=utf8&parseTime=True&loc=Local")
 	Convey("test ancient", t, func() {
 		So(err, ShouldBeNil)
 		So(m, ShouldNotBeNil)
