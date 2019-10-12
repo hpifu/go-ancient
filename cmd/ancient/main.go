@@ -15,6 +15,7 @@ import (
 	"github.com/hpifu/go-ancient/internal/es"
 	"github.com/hpifu/go-ancient/internal/mysql"
 	"github.com/hpifu/go-ancient/internal/service"
+	"github.com/hpifu/go-kit/hhttp"
 	"github.com/hpifu/go-kit/logger"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/spf13/viper"
@@ -103,16 +104,17 @@ func main() {
 	})
 
 	// set handler
+	d := hhttp.NewGinHttpDecorator(infoLog, warnLog, accessLog)
 	r.GET("/ping", func(ctx *gin.Context) {
 		ctx.String(200, "ok")
 	})
-	r.GET("/ancient", service.Decorator(svc.GETAncients))
-	r.GET("/ancient/:id", service.Decorator(svc.GETAncient))
-	r.GET("/author", service.Decorator(svc.GETAuthors))
-	r.GET("/author/:author", service.Decorator(svc.GETAuthor))
-	r.GET("/dynasty", service.Decorator(svc.GETDynastys))
-	r.GET("/dynasty/:dynasty", service.Decorator(svc.GETDynasty))
-	r.GET("/search", service.Decorator(svc.Search))
+	r.GET("/ancient", d.Decorate(svc.GETAncients))
+	r.GET("/ancient/:id", d.Decorate(svc.GETAncient))
+	r.GET("/author", d.Decorate(svc.GETAuthors))
+	r.GET("/author/:author", d.Decorate(svc.GETAuthor))
+	r.GET("/dynasty", d.Decorate(svc.GETDynastys))
+	r.GET("/dynasty/:dynasty", d.Decorate(svc.GETDynasty))
+	r.GET("/search", d.Decorate(svc.Search))
 
 	infoLog.Infof("%v init success, port [%v]", os.Args[0], config.GetString("service.port"))
 

@@ -27,7 +27,7 @@ replace (
 
 require (
 	github.com/gin-gonic/gin v1.4.0
-	github.com/hpifu/go-kit v1.2.0
+	github.com/hpifu/go-kit v1.6.1
 	github.com/jinzhu/gorm v1.9.10
 	github.com/lestrrat-go/file-rotatelogs v2.2.0+incompatible
 	github.com/olivere/elastic/v7 v7.0.6
