@@ -35,7 +35,7 @@ func main() {
 
 	// load config
 	config := viper.New()
-	config.SetEnvPrefix("account")
+	config.SetEnvPrefix("ancient")
 	config.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	config.AutomaticEnv()
 	config.SetConfigType("json")
