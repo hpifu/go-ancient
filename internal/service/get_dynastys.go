@@ -12,7 +12,7 @@ type DynastysReq struct {
 	Limit  int `form:"limit"`
 }
 
-func (s *Service) GETDynastys(c *gin.Context) (interface{}, interface{}, int, error) {
+func (s *Service) GETDynastys(rid string, c *gin.Context) (interface{}, interface{}, int, error) {
 	req := &AuthorsReq{Limit: 20}
 
 	if err := c.Bind(req); err != nil {

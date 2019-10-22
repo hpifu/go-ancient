@@ -28,11 +28,12 @@ replace (
 require (
 	github.com/gin-contrib/cors v1.3.0
 	github.com/gin-gonic/gin v1.4.0
-	github.com/hpifu/go-kit v1.6.1
+	github.com/hpifu/go-kit v1.6.7
 	github.com/jinzhu/gorm v1.9.10
 	github.com/lestrrat-go/file-rotatelogs v2.2.0+incompatible
 	github.com/olivere/elastic/v7 v7.0.6
 	github.com/sirupsen/logrus v1.4.2
 	github.com/smartystreets/goconvey v0.0.0-20190731233626-505e41936337
 	github.com/spf13/viper v1.4.0
+	gopkg.in/sohlich/elogrus.v7 v7.0.0
 )

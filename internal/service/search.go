@@ -13,7 +13,7 @@ type SearchReq struct {
 	Limit  int    `form:"limit"`
 }
 
-func (s *Service) Search(c *gin.Context) (interface{}, interface{}, int, error) {
+func (s *Service) Search(rid string, c *gin.Context) (interface{}, interface{}, int, error) {
 	req := &SearchReq{Limit: 20}
 
 	if err := c.Bind(req); err != nil {

@@ -12,7 +12,7 @@ type AuthorsReq struct {
 	Limit  int `form:"limit"`
 }
 
-func (s *Service) GETAuthors(c *gin.Context) (interface{}, interface{}, int, error) {
+func (s *Service) GETAuthors(rid string, c *gin.Context) (interface{}, interface{}, int, error) {
 	req := &AuthorsReq{Limit: 20}
 
 	if err := c.Bind(req); err != nil {

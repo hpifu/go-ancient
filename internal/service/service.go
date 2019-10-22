@@ -6,15 +6,20 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var InfoLog *logrus.Logger = logrus.New()
-var WarnLog *logrus.Logger = logrus.New()
-var AccessLog *logrus.Logger = logrus.New()
-
 type Service struct {
-	db     *mysql.Mysql
-	es     *es.ES
-	secure bool
-	domain string
+	db        *mysql.Mysql
+	es        *es.ES
+	secure    bool
+	domain    string
+	infoLog   *logrus.Logger
+	warnLog   *logrus.Logger
+	accessLog *logrus.Logger
+}
+
+func (s *Service) SetLogger(infoLog, warnLog, accessLog *logrus.Logger) {
+	s.infoLog = infoLog
+	s.warnLog = warnLog
+	s.accessLog = accessLog
 }
 
 func NewService(
@@ -24,9 +29,12 @@ func NewService(
 	domain string,
 ) *Service {
 	return &Service{
-		db:     db,
-		es:     es,
-		secure: secure,
-		domain: domain,
+		db:        db,
+		es:        es,
+		secure:    secure,
+		domain:    domain,
+		infoLog:   logrus.New(),
+		warnLog:   logrus.New(),
+		accessLog: logrus.New(),
 	}
 }

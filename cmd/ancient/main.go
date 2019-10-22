@@ -19,7 +19,10 @@ import (
 	"github.com/hpifu/go-kit/hhttp"
 	"github.com/hpifu/go-kit/logger"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/olivere/elastic/v7"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"gopkg.in/sohlich/elogrus.v7"
 )
 
 // AppVersion name
@@ -50,21 +53,22 @@ func main() {
 	}
 
 	// init logger
-	infoLog, err := logger.NewTextLoggerWithViper(config.Sub("logger.infoLog"))
+	infoLog, warnLog, accessLog, err := logger.NewLoggerGroupWithViper(config.Sub("logger"))
 	if err != nil {
 		panic(err)
 	}
-	warnLog, err := logger.NewTextLoggerWithViper(config.Sub("logger.warnLog"))
+	client, err := elastic.NewClient(
+		elastic.SetURL(config.GetString("es.uri")),
+		elastic.SetSniff(false),
+	)
 	if err != nil {
 		panic(err)
 	}
-	accessLog, err := logger.NewJsonLoggerWithViper(config.Sub("logger.accessLog"))
+	hook, err := elogrus.NewAsyncElasticHook(client, "go-ancient", logrus.InfoLevel, "go-ancient-log")
 	if err != nil {
 		panic(err)
 	}
-	service.InfoLog = infoLog
-	service.WarnLog = warnLog
-	service.AccessLog = accessLog
+	accessLog.Hooks.Add(hook)
 
 	// init mysqldb
 	db, err := mysql.NewMysql(config.GetString("mysqldb.uri"))
@@ -85,6 +89,7 @@ func main() {
 	origins := config.GetStringSlice("service.allowOrigins")
 	// init services
 	svc := service.NewService(db, esclient, secure, domain)
+	svc.SetLogger(infoLog, warnLog, accessLog)
 
 	// init gin
 	gin.SetMode(gin.ReleaseMode)
